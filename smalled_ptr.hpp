@@ -39,12 +39,12 @@ template <class T> struct smalled_ptr {
   ~smalled_ptr() {
     _counter->references--;
     if (!_counter->references) {
-      delete _ptr;
+      delete _ptr.get();
       delete _counter;
     }
   }
 
 private:
-  T *_ptr;
+  hidden_value_ptr<T> _ptr;
   reference_counter *_counter;
 };
