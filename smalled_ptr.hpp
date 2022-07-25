@@ -28,8 +28,10 @@ private:
   std::uintptr_t _pointer;
 };
 
-/// Reference counted smart pointer, similar to `shared_ptr`, but its size
-/// equals the size of the raw pointer.
+/// Reference counted smart pointer, similar to `std::shared_ptr`, but its size
+/// equals the size of the raw pointer. While it is smaller than a standard
+/// shared pointer, it does have a disadvantage of having runtime check during
+/// dereference.
 template <class T> struct smalled_ptr {
   smalled_ptr(T *pointer) : _ptr(pointer) {}
 
