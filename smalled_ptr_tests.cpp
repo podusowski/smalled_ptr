@@ -2,6 +2,7 @@
 #include <exception>
 #include <iostream>
 #include <stdexcept>
+#include <memory>
 
 #include "smalled_ptr.hpp"
 
@@ -50,4 +51,21 @@ TEST_CASE("object keeps living until second pointer is destroyed") {
     REQUIRE(!destructor_called);
   }
   REQUIRE(destructor_called);
+}
+
+TEST_CASE("hidden value pointer")
+{
+    auto gc = std::make_unique<int>(42);
+    hidden_value_ptr<int> p{gc.get()};
+
+    REQUIRE(42 == *p.get());
+    REQUIRE(!p.flag());
+
+    p.flag(true);
+    REQUIRE(42 == *p.get());
+    REQUIRE(p.flag());
+
+    p.flag(false);
+    REQUIRE(42 == *p.get());
+    REQUIRE(!p.flag());
 }
