@@ -6,22 +6,20 @@ struct reference_counter {
   unsigned references;
 };
 
+/// Takes advantage of malloc's alignment to store a value on the last bit.
 template <class T> struct hidden_value_ptr {
   explicit hidden_value_ptr(T *pointer)
       : _pointer(reinterpret_cast<std::uintptr_t>(pointer)) {}
 
   T *get() const { return reinterpret_cast<T *>(_pointer & ~1ul); }
 
-  bool flag() const {
-    const auto p2 = (_pointer & 1ul);
-    return p2 == 1ul;
-  }
+  bool flag() const { return (_pointer & 1ul) == 1ul; }
 
   void flag(bool value) {
     if (value)
-      _pointer = _pointer | 1ul;
+      _pointer |= 1ul;
     else
-      _pointer = _pointer & ~1ul;
+      _pointer &= ~1ul;
   }
 
 private:
