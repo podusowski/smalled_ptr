@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstdint>
-#include <iostream>
 
 struct reference_counter {
   unsigned references;
@@ -12,16 +11,12 @@ template <class T> struct hidden_value_ptr {
 
   T *get() const {
     const auto p = reinterpret_cast<std::uintptr_t>(_pointer);
-    std::cerr << "p=" << p << std::endl;
     const auto p2 = reinterpret_cast<T *>(p & ~1ul);
-    std::cerr << "p2=" << p2 << std::endl;
     return p2;
   }
 
   bool flag() const {
-
     const auto p = reinterpret_cast<std::uintptr_t>(_pointer);
-    std::cerr << "p=" << p << std::endl;
     const auto p2 = (p & 1ul);
     return p2 == 1ul;
   }
