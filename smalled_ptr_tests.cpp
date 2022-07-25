@@ -7,8 +7,8 @@
 #include "smalled_ptr.hpp"
 
 TEST_CASE("size of the pointer is equal to raw pointer") {
-  // static_assert(sizeof(smalled_ptr<int>) == sizeof(void *),
-  //               "grand feature is broken");
+  static_assert(sizeof(smalled_ptr<int>) == sizeof(void *),
+                "grand feature is broken");
 }
 
 struct testable_destructor {
@@ -57,14 +57,14 @@ TEST_CASE("hidden value pointer") {
   auto gc = std::make_unique<int>(42);
   hidden_value_ptr p{gc.get()};
 
-  REQUIRE(42 == *reinterpret_cast<int*>(p.get()));
+  REQUIRE(42 == *reinterpret_cast<int *>(p.get()));
   REQUIRE(!p.flag());
 
   p.flag(true);
-  REQUIRE(42 == *reinterpret_cast<int*>(p.get()));
+  REQUIRE(42 == *reinterpret_cast<int *>(p.get()));
   REQUIRE(p.flag());
 
   p.flag(false);
-  REQUIRE(42 == *reinterpret_cast<int*>(p.get()));
+  REQUIRE(42 == *reinterpret_cast<int *>(p.get()));
   REQUIRE(!p.flag());
 }
