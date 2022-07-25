@@ -1,14 +1,14 @@
 #include <catch2/catch_test_macros.hpp>
 #include <exception>
 #include <iostream>
-#include <stdexcept>
 #include <memory>
+#include <stdexcept>
 
 #include "smalled_ptr.hpp"
 
 TEST_CASE("size of the pointer is equal to raw pointer") {
-  //static_assert(sizeof(smalled_ptr<int>) == sizeof(void *),
-  //              "grand feature is broken");
+  // static_assert(sizeof(smalled_ptr<int>) == sizeof(void *),
+  //               "grand feature is broken");
 }
 
 struct testable_destructor {
@@ -47,25 +47,24 @@ TEST_CASE("object keeps living until second pointer is destroyed") {
   {
     smalled_ptr<testable_destructor> outer_ptr{
         new testable_destructor{destructor_called}};
-    { smalled_ptr<testable_destructor> inner_ptr = outer_ptr; }
+    { smalled_ptr<testable_destructor> inner_ptr = outer_ptr.duplicate(); }
     REQUIRE(!destructor_called);
   }
   REQUIRE(destructor_called);
 }
 
-TEST_CASE("hidden value pointer")
-{
-    auto gc = std::make_unique<int>(42);
-    hidden_value_ptr<int> p{gc.get()};
+TEST_CASE("hidden value pointer") {
+  auto gc = std::make_unique<int>(42);
+  hidden_value_ptr p{gc.get()};
 
-    REQUIRE(42 == *p.get());
-    REQUIRE(!p.flag());
+  REQUIRE(42 == *reinterpret_cast<int*>(p.get()));
+  REQUIRE(!p.flag());
 
-    p.flag(true);
-    REQUIRE(42 == *p.get());
-    REQUIRE(p.flag());
+  p.flag(true);
+  REQUIRE(42 == *reinterpret_cast<int*>(p.get()));
+  REQUIRE(p.flag());
 
-    p.flag(false);
-    REQUIRE(42 == *p.get());
-    REQUIRE(!p.flag());
+  p.flag(false);
+  REQUIRE(42 == *reinterpret_cast<int*>(p.get()));
+  REQUIRE(!p.flag());
 }
